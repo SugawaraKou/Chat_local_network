@@ -24,8 +24,6 @@ except socket.error as message:
     print(message)
 
 
-# handle_client function
-
 def handle_client(conn, addr):  # создает клиентский поток
     user_connect = ("[NEW CONNECTION] {} - {} connected.".format(addr[0], members[addr]))
     print("[NEW CONNECTION] {} - {} connected.".format(addr[0], members[addr]))
