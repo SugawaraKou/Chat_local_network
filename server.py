@@ -1,9 +1,9 @@
 import socket
 import threading
 
-
 host = socket.gethostbyname(socket.gethostname())
-port = 8080
+port = 8080  # закомитеть эту строчку для ввода порта
+# port = input("Введите порт: ")  # Разкомитеть строчку для ввода порта
 address = (host, port)
 socket_list = []
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # AF_INET expects tuple
