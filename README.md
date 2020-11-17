@@ -2,10 +2,14 @@
 
 ### Какие библиотеки нужны
 
->socket
+> socket
 * pip install sockets \n
->threading
+> threading
 * pip install threaded
+> sys
+* pip install os-sys
+> select
+* pip install selection
 
 ### Запуск
 Сначала запустите server.py, он вам выдаст ip и порт на каком он находиться.
