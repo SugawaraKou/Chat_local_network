@@ -23,7 +23,6 @@ def client():
         print("Can't connect to server")
         sys.exit()
 
-    # server_sock.setblocking(False)
     server_sock.send(name.encode("utf8"))
     connected = True
     data = server_sock.recv(2048).decode("utf8")  # welcome message
