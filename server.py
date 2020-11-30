@@ -15,6 +15,8 @@ name = ""
 
 socket_list.append(server)
 
+log = open("log", "a")
+
 # bind socket
 
 try:
@@ -36,6 +38,7 @@ def handle_client(conn, addr):  # создает клиентский поток
             msg = conn.recv(byt).decode(FORMAT)  # получить сообщение
             if msg:
                 print(f"<{addr[0]} - {members[addr]}> {msg}")
+                log.write(f"<{addr[0]} - {members[addr]}> {msg}")
                 user_msg = f"<{addr[0]} - {members[addr]}> {msg}"
                 broadcast(user_msg, conn)
             else:
