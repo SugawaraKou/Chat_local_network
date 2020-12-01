@@ -34,13 +34,12 @@ def client():
             read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
             for sock in read_sockets:
                 if sock == server_sock:
-                    data = server_sock.recv(2048).decode("utf8")
+                    data = server_sock.recv(2048).decode("utf8")  # чужие сообщения
                     if len(data) == 0:
                         print("You have disconnected.")
                         sys.exit()
-                    print(data)
                 else:
-                    my_msg = sys.stdin.readline()
+                    my_msg = sys.stdin.readline()  # мои сообщения
                     server_sock.send(my_msg.encode("utf8"))
         except:
             print("You have disconnected manually")
