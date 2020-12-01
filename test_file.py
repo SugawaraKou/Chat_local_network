@@ -10,6 +10,9 @@ class ExampleApp(QtWidgets.QMainWindow, gui.Ui_MainWindow):
         self.setupUi(self)
         self.build_handlers()
 
+    def test(self):
+        self.plainTextEdit.appendPlainText("sddddddddd")
+
     def build_handlers(self):
         self.pushButton.clicked.connect(self.on_button_click)
 
@@ -17,6 +20,7 @@ class ExampleApp(QtWidgets.QMainWindow, gui.Ui_MainWindow):
         message = self.lineEdit.text()
         self.plainTextEdit.appendPlainText(message)
         self.lineEdit.clear()
+        self.test()
 
 
 

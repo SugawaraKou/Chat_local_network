@@ -1,29 +1,36 @@
 import socket
-import sys
 import select
-
 import sys
 from PyQt5 import QtWidgets
 from Chat_local_network import gui
 
-class con():
-    def __init__(self, app_window):
-        self.window = app_window
 
+class ExampleApp(QtWidgets.QMainWindow, gui.Ui_MainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.build_handlers()
 
-    def connect(self):
+    def client(self):
+        # establish socket
         server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.plainTextEdit.appendPlainText("Hello Word")
 
         if len(sys.argv) != 3:
-            self.plainTextEdit.appendPlainText("Please enter: scriptname,")
+            self.plainTextEdit.appendPlainText("Please enter: scriptname, IP address, port number")
 
-        IP = "192.168.88.8"
-        port = "8080"
-        name = str(self.lineEdit.text())
+        IP = str(input("IP server: "))
+        self.plainTextEdit.appendPlainText("IP server: ")
+        port = int(input("PORT server: "))
+        self.plainTextEdit.appendPlainText("PORT server: ")
+
+        name = str(input("Please enter your name: "))
+        self.plainTextEdit.appendPlainText("Please enter your name: ")
+
         # connect to server
         try:
             server_sock.connect((IP, port))
-            self.pconnectlainTextEdit.appendPlainText("Trying to connect...")
+            self.plainTextEdit.appendPlainText("Trying to connect...")
         except:
             self.plainTextEdit.appendPlainText("Can't connect to server")
             sys.exit()
@@ -32,48 +39,44 @@ class con():
         connected = True
         data = server_sock.recv(2048).decode("utf8")  # welcome message
         self.plainTextEdit.appendPlainText("<" + IP + ">: " + data)
+        while connected:
+            socket_list = [sys.stdin, server_sock]
+            try:
 
-class ExampleApp(QtWidgets.QMainWindow, gui.Ui_MainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.init_handlers()
+                read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
+                for sock in read_sockets:
+                    if sock == server_sock:
+                        data = server_sock.recv(2048).decode("utf8")  # чужие сообщения
+                        self.plainTextEdit.appendPlainText(data)
+                        if len(data) == 0:
+                            # self.plainTextEdit.appendPlainText()
+                            print("You have disconnected.")
+                            sys.exit()
+                    else:
+                        my_msg = sys.stdin.readline()  # мои сообщения
+                        self.plainTextEdit.appendPlainText(my_msg)
+                        server_sock.send(my_msg.encode("utf8"))
+            except:
+                self.plainTextEdit.appendPlainText("You have disconnected manually")
+                connected = False
 
-    def closeEvent(self, event):
-        self.reactor.callFromThread(self.reactor.stop)
+        self.plainTextEdit.appendPlainText("You have disconnected ")
 
-    def init_handlers(self):
-        self.pushButton.clicked.connect(self.send_message)
+    def build_handlers(self):
+        self.pushButton.clicked.connect(self.on_button_click)
 
-    def send_message(self):
-        server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socket_list = [sys.stdin, server_sock]
-        try:
-            read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
-            for sock in read_sockets:
-                if sock == server_sock:
-                    data = server_sock.recv(2048).decode("utf8")  # чужие сообщения
-                    self.plainTextEdit.appendPlainText(data)
-                    if len(data) == 0:
-                        self.plainTextEdit.appendPlainText("You have disconnected.")
-                        sys.exit()
-                else:
-                    message = self.lineEdit.text()
-                    #my_msg = sys.stdin.readline()  # мои сообщения
-                    server_sock.send(message.encode("utf8"))
-                    self.plainTextEdit.appendPlainText(message)
-                    self.lineEdit.clear()
-        except:
-            self.plainTextEdit.appendPlainText("You have disconnected manually")
-            connected = False
-            self.closeEvent()
+    def on_button_click(self):
+        message = self.lineEdit.text()
+        self.plainTextEdit.appendPlainText(message)
+        self.lineEdit.clear()
+        self.client()
+
+
 
 def main():
-
     app = QtWidgets.QApplication(sys.argv)
     window = ExampleApp()
     window.show()
-    con(window)
     app.exec_()
 
 
