@@ -6,9 +6,10 @@ import sys
 from PyQt5 import QtWidgets
 from Chat_local_network import gui
 
-class connect():
+class con():
     def __init__(self, app_window):
         self.window = app_window
+
 
     def connect(self):
         server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -36,7 +37,6 @@ class ExampleApp(QtWidgets.QMainWindow, gui.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.connect()
         self.init_handlers()
 
     def closeEvent(self, event):
@@ -73,7 +73,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     window = ExampleApp()
     window.show()
-    connect(window)
+    con(window)
     app.exec_()
 
 
