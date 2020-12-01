@@ -3,7 +3,7 @@
 ### Какие библиотеки нужны
 
 > socket
-* pip install sockets \n
+* pip install sockets
 > threading
 * pip install threaded
 > sys
